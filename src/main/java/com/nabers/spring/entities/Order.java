@@ -12,6 +12,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+
 @Entity
 @Table(name = "Order_Table")
 public class Order implements Serializable {
@@ -22,16 +25,18 @@ public class Order implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	
+
+	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
 	private Instant moment;
 
 	@ManyToOne
+	// @JsonIgnore
 	private User client;
 
 	public Order() {
 	}
 
-	public Order(int id, Instant moment, User client) {
+	public Order(Integer id, Instant moment, User client) {
 		super();
 		this.id = id;
 		this.moment = moment;
