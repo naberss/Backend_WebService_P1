@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "Order_Table")
@@ -23,21 +22,20 @@ public class Order implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-
-	@NotBlank
+	
 	private Instant moment;
 
-	@NotBlank
 	@ManyToOne
 	private User client;
 
 	public Order() {
 	}
 
-	public Order(int id, Instant moment) {
+	public Order(int id, Instant moment, User client) {
 		super();
 		this.id = id;
 		this.moment = moment;
+		this.client = client;
 	}
 
 	public int getId() {
