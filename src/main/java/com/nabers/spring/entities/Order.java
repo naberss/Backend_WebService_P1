@@ -14,6 +14,7 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.nabers.spring.entities.enums.OrderStatus;
 
 @Entity
 @Table(name = "Order_Table")
@@ -33,14 +34,17 @@ public class Order implements Serializable {
 	// @JsonIgnore
 	private User client;
 
+	private Integer status;
+
 	public Order() {
 	}
 
-	public Order(Integer id, Instant moment, User client) {
+	public Order(Integer id, Instant moment, User client, OrderStatus status) {
 		super();
 		this.id = id;
 		this.moment = moment;
 		this.client = client;
+		setStatus(status);
 	}
 
 	public int getId() {
@@ -65,6 +69,17 @@ public class Order implements Serializable {
 
 	public void setClient(User client) {
 		this.client = client;
+	}
+
+	public OrderStatus getStatus() {
+		return OrderStatus.valueOf(status);
+	}
+
+	public void setStatus(OrderStatus status) {
+		if (status != null) {
+			this.status = status.getId();
+		}
+
 	}
 
 	@Override

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.nabers.spring.entities.Order;
 import com.nabers.spring.entities.User;
+import com.nabers.spring.entities.enums.OrderStatus;
 import com.nabers.spring.services.OrderService;
 import com.nabers.spring.services.UserService;
 
@@ -37,9 +38,9 @@ public class UserController {
 	ResponseEntity<User> getUser2() {
 		User u = new User(1, "lucas", "lucas-berto@hotmail.com", "27998841869", "03031998");
 		userService.InsertUpdate(u);
-		Order o = new Order(1, Instant.parse("2019-06-20T19:53:07Z"), u);
+		Order o = new Order(1, Instant.parse("2019-06-20T19:53:07Z"), u, OrderStatus.DELIVERED);
 		orderService.InsertUpdate(o);
-		Order o1 = new Order(2, Instant.parse("2018-06-20T19:53:07Z"), u);
+		Order o1 = new Order(2, Instant.parse("2018-06-20T19:53:07Z"), u, OrderStatus.SHIPPED);
 		orderService.InsertUpdate(o1);
 		return ResponseEntity.unprocessableEntity().body(u);
 	}
