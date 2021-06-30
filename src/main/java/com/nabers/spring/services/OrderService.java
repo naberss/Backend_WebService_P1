@@ -16,8 +16,8 @@ public class OrderService {
 	@Autowired
 	public OrderRepository orderRepository;
 
-	public void InsertUpdate(Order user) {
-		orderRepository.save(user);
+	public void InsertUpdate(Order order) {
+		orderRepository.save(order);
 	}
 
 	public Optional<Order> findById(int id) {
