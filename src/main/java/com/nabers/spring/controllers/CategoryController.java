@@ -1,5 +1,6 @@
 package com.nabers.spring.controllers;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -30,7 +31,8 @@ public class CategoryController {
 	@RequestMapping(method = RequestMethod.GET, path = "/getinfo2")
 	ResponseEntity<Category> getCategory2() {
 		Category category = new Category(135, "TESTE");
-		categoryService.InsertUpdate(category);
+		Category category1 = new Category(1, "FINANCIAL");
+		categoryService.SaveAll(Arrays.asList(category1,category));
 		return ResponseEntity.unprocessableEntity().body(category);
 	}
 

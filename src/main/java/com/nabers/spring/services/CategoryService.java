@@ -26,6 +26,10 @@ public class CategoryService {
 
 	public void deleteById(int id) {
 		categoryRepository.deleteById(id);
-	}	
+	}
+
+	public void SaveAll(Iterable<Category> categories) {
+		categoryRepository.saveAll(categories);
+	}
 
 }
