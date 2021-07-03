@@ -20,7 +20,7 @@ import com.nabers.spring.services.OrderService;
 import com.nabers.spring.services.UserService;
 
 @RestController
-@RequestMapping(method = RequestMethod.GET, path = "/order")
+@RequestMapping(method = RequestMethod.GET, path = "/orders")
 public class OrderController {
 
 	@Autowired
@@ -29,7 +29,7 @@ public class OrderController {
 	@Autowired
 	UserService userService;
 
-	@RequestMapping(method = RequestMethod.GET, path = "/getinfo")
+	@RequestMapping(method = RequestMethod.GET, path = "/getinfo2")
 	ResponseEntity<Order> getOrder() {
 		User u = new User(1, "lucas", "lucas-berto@hotmail.com", "27998841869", "03031998");		
 		Order o1 = new Order(1, Instant.parse("2019-06-20T19:53:07Z"), u,OrderStatus.PAID);

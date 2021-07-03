@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nabers.spring.entities.pk.OrderItemPK;
 
 @Entity
@@ -18,7 +19,7 @@ public class OrderItem implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@EmbeddedId
-	private OrderItemPK id;
+	private OrderItemPK id = new OrderItemPK();
 	private Integer quantity;
 	private Double Price;
 
@@ -37,10 +38,12 @@ public class OrderItem implements Serializable {
 		return id.getOrder();
 	}
 
+	@JsonIgnore
 	public void setOrder(Order order) {
 		id.setOrder(order);
 	}
 
+	
 	public Product getProduct() {
 		return id.getProduct();
 	}
