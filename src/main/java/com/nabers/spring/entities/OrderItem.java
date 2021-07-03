@@ -34,15 +34,15 @@ public class OrderItem implements Serializable {
 		this.Price = price;
 	}
 
+	@JsonIgnore
 	public Order getOrder() {
 		return id.getOrder();
 	}
 
-	@JsonIgnore
+	
 	public void setOrder(Order order) {
 		id.setOrder(order);
 	}
-
 	
 	public Product getProduct() {
 		return id.getProduct();
