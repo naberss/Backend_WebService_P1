@@ -84,5 +84,9 @@ public class OrderItem implements Serializable {
 		OrderItem other = (OrderItem) obj;
 		return Objects.equals(id, other.id);
 	}
+	
+	public Double getSubtotal() {
+		return (this.Price * this.quantity);
+	}
 
 }
