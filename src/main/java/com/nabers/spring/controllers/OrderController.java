@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nabers.spring.entities.Order;
+import com.nabers.spring.entities.Payment;
 import com.nabers.spring.entities.User;
 import com.nabers.spring.entities.enums.OrderStatus;
 import com.nabers.spring.services.OrderService;
@@ -31,8 +32,10 @@ public class OrderController {
 
 	@RequestMapping(method = RequestMethod.GET, path = "/getinfo2")
 	ResponseEntity<Order> getOrder() {
-		User u = new User(1, "lucas", "lucas-berto@hotmail.com", "27998841869", "03031998");		
+		User u = new User(1, "lucas", "lucas-berto@hotmail.com", "27998841869", "03031998");
 		Order o1 = new Order(1, Instant.parse("2019-06-20T19:53:07Z"), u,OrderStatus.PAID);
+		Payment payment = new Payment(null, Instant.parse("2019-06-20T19:53:07Z"), o1);
+		o1.setPayment(payment);
 		userService.InsertUpdate(u);
 		orderService.InsertUpdate(o1);
 		return ResponseEntity.unprocessableEntity().body(o1);
