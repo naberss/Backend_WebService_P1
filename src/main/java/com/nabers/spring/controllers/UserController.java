@@ -60,6 +60,11 @@ public class UserController {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(u.getId()).toUri();
 
 		return ResponseEntity.created(uri).body(u);
+	}
 
+	@RequestMapping(method = RequestMethod.DELETE, path = "/delete/{id}")
+	public ResponseEntity<User> deleteById(@PathVariable int id) {
+		userService.deleteById(id);
+		return ResponseEntity.noContent().build();
 	}
 }
