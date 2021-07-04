@@ -1,0 +1,151 @@
+{
+	"info": {
+		"_postman_id": "82e3cea9-14ef-409a-8683-2c8b021e1ccf",
+		"name": "Product",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Product(Insert)",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 1,\r\n    \"name\": \"SAMSUNG BOOK\",\r\n    \"description\": \"QUITE A NICE COMPUTER\",\r\n    \"price\": 1500.0,\r\n    \"categories\": [\r\n        {\r\n            \"id\": 1,\r\n            \"name\": \"FINANCIAL\"\r\n        }\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/products/insert",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"products",
+						"insert"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Product(FindById)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/products/findbyid/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"products",
+						"findbyid",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Product(FindByName)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/products/findbyname/BOOK",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"products",
+						"findbyname",
+						"BOOK"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Product(FindAll)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/products/findall",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"products",
+						"findall"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Product(Update)",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"EVO BOOK\",\r\n    \"description\": \"SOMETHING ELSE\",\r\n    \"price\": 1350.0\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8081/products/update/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"products",
+						"update",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Product(Delete)",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8081/products/delete/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8081",
+					"path": [
+						"products",
+						"delete",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

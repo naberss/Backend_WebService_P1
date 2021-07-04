@@ -16,12 +16,33 @@ public class ProductService {
 	@Autowired
 	public ProductRepository productRepository;
 
-	public void InsertUpdate(Product Product) {
+	public void Insert(Product Product) {
 		productRepository.save(Product);
 	}
 
 	public Optional<Product> findById(int id) {
 		return productRepository.findById(id);
+	}
+
+	public Iterable<Product> findByName(String name) {
+		return productRepository.findByName(name);
+	}
+
+	public Iterable<Product> findAll() {
+		return productRepository.findAll();
+	}
+
+	public Product update(Integer id, Product newProduct) {
+		Product product = productRepository.findById(id).orElse(null);
+		updateData(product, newProduct);
+		productRepository.save(product);
+		return product;
+	}
+
+	public void updateData(Product oldProduct, Product newProduct) {
+		oldProduct.setName(newProduct.getName());
+		oldProduct.setDescription(newProduct.getDescription());
+		oldProduct.setPrice(newProduct.getPrice());
 	}
 
 	public void deleteById(int id) {
