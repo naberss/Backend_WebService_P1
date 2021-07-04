@@ -1,5 +1,6 @@
 package com.nabers.spring.controllers;
 
+import java.net.URI;
 import java.time.Instant;
 import java.util.Optional;
 
@@ -8,10 +9,12 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.nabers.spring.entities.Order;
 import com.nabers.spring.entities.User;
@@ -52,9 +55,11 @@ public class UserController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST, path = "/insertUpdate")
-	public @ResponseBody ResponseEntity<User> insertUpdate(@Valid User u) {
+	public @ResponseBody ResponseEntity<User> insertUpdate(@Valid @RequestBody User u) {
 		userService.InsertUpdate(u);
-		return ResponseEntity.accepted().body(u);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(u.getId()).toUri();
+
+		return ResponseEntity.created(uri).body(u);
 
 	}
 }

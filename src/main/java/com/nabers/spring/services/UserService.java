@@ -1,5 +1,6 @@
 package com.nabers.spring.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,10 @@ public class UserService {
 
 	public void InsertUpdate(User user) {
 		userRepository.save(user);
+	}
+	
+	public List<User> findAll(){
+		return userRepository.findAll();
 	}
 
 	public Optional<User> findById(int id) {
