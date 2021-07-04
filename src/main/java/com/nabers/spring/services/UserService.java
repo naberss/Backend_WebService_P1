@@ -20,8 +20,8 @@ public class UserService {
 	public void InsertUpdate(User user) {
 		userRepository.save(user);
 	}
-	
-	public List<User> findAll(){
+
+	public List<User> findAll() {
 		return userRepository.findAll();
 	}
 
@@ -39,6 +39,20 @@ public class UserService {
 
 	public void containName(String name) {
 		userRepository.ContainName(name);
+	}
+
+	@SuppressWarnings("deprecation")
+	public User update(int id, User obj) {
+		User user = userRepository.getOne(id);
+		updateData(user, obj);
+		return userRepository.save(user);
+
+	}
+
+	public void updateData(User user, User obj) {
+		user.setPhone(obj.getPhone());
+		user.setEmail(obj.getEmail());
+		user.setName(obj.getName());
 	}
 
 }
