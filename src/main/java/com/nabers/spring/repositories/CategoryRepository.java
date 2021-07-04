@@ -12,8 +12,5 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
 	@Query(value = "select A from Category A where A.name like %:name%")
 	public Iterable<Category> findByName(@Param(value = "name") String name);
-	
-	@Query(value = "select A from Category A where A.name like %:name%")
-	public Iterable<Category> findByIdAux(@Param(value = "name") String name);
 
 }

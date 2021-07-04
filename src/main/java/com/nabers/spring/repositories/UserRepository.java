@@ -13,6 +13,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	public void deleteByName(String name);
 
 	@Query(value = "select a from User a where a.name like %:name%")
-	public Iterable<User> ContainName(@Param(value = "name") String name);
+	public Iterable<User> findByName(@Param(value = "name") String name);
 
 }
