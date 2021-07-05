@@ -1,21 +1,21 @@
 package com.nabers.spring.controllers;
 
+import java.net.URI;
 import java.time.Instant;
 import java.util.Optional;
-
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.nabers.spring.entities.Order;
-import com.nabers.spring.entities.Payment;
-import com.nabers.spring.entities.User;
 import com.nabers.spring.entities.enums.OrderStatus;
 import com.nabers.spring.services.OrderService;
 import com.nabers.spring.services.UserService;
@@ -30,28 +30,42 @@ public class OrderController {
 	@Autowired
 	UserService userService;
 
-	@RequestMapping(method = RequestMethod.GET, path = "/getinfo2")
-	ResponseEntity<Order> getOrder() {
-		User u = new User(1, "lucas", "lucas-berto@hotmail.com", "27998841869", "03031998");
-		Order o1 = new Order(1, Instant.parse("2019-06-20T19:53:07Z"), u,OrderStatus.PAID);
-		Payment payment = new Payment(null, Instant.parse("2019-06-20T19:53:07Z"), o1);
-		o1.setPayment(payment);
-		userService.InsertUpdate(u);
-		orderService.InsertUpdate(o1);
-		return ResponseEntity.unprocessableEntity().body(o1);
+	@RequestMapping(method = RequestMethod.POST, path = "/insert")
+	public @ResponseBody ResponseEntity<Order> insert(@RequestParam(name = "id") Integer id,
+			                                          @RequestParam(name = "moment") Instant moment,
+			                                          @RequestParam(name = "user_id") Integer user_id,
+			                                          @RequestParam(name = "status") String status) {
+		Order order = new Order(id, moment, userService.findByIdAux(id), OrderStatus.valueOf(status));
+		orderService.Insert(order);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(order.getId()).toUri();
+		return ResponseEntity.created(uri).body(order);
 	}
 
-	@RequestMapping(method = RequestMethod.POST, path = "/insertUpdate")
-	public @ResponseBody ResponseEntity<Order> insertUpdate(@Valid Order o1) {
-		orderService.InsertUpdate(o1);
-		return ResponseEntity.accepted().body(o1);
-
-	}
-
-	@RequestMapping(method = RequestMethod.GET, path = "/getinfo/{id}")
+	@RequestMapping(method = RequestMethod.GET, path = "/findbyid/{id}")
 	public ResponseEntity<Optional<Order>> showInfo(@PathVariable(name = "id") int id) {
 		Optional<Order> order = orderService.findById(id);
 		return ResponseEntity.ok().body(order);
+	}
+
+	@RequestMapping(method = RequestMethod.GET, path = "/findall")
+	public @ResponseBody ResponseEntity<Iterable<Order>> findAll() {
+		Iterable<Order> allOrders = orderService.findAll();
+		return ResponseEntity.ok().body(allOrders);
+	}
+
+	@RequestMapping(method = RequestMethod.PUT, path = "/update/{id}")
+	public @ResponseBody ResponseEntity<Order> update(@PathVariable(name = "id") Integer id,
+			                                          @RequestBody Order newOrder) {
+		newOrder.getPayment().setOrder(orderService.findByIdAux(id));
+		Order order = orderService.update(id, newOrder);
+		return ResponseEntity.accepted().body(order);
+
+	}
+
+	@RequestMapping(method = RequestMethod.DELETE, path = "/delete/{id}")
+	public @ResponseBody ResponseEntity<Order> update(@PathVariable(name = "id") Integer id) {
+		orderService.deleteById(id);
+		return ResponseEntity.noContent().build();
 	}
 
 }

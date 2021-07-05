@@ -23,6 +23,10 @@ public class UserService {
 	public Optional<User> findById(int id) {
 		return userRepository.findById(id);
 	}
+	
+	public User findByIdAux(int id) {
+		return userRepository.findById(id).orElse(null);
+	}
 
 	public Iterable<User> findAll() {
 		return userRepository.findAll();

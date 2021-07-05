@@ -32,7 +32,7 @@ public class OrdemItemController {
 		Product p1 = new Product(1, "SAMSUNG BOOK", "QUITE A NICE COMPUTER", 1500.0);
 		return new OrderItem(p1, o1, 1, p1.getPrice());
 	}
-
+   
 	@RequestMapping(method = RequestMethod.GET, path = "/getinfo2")
 	ResponseEntity<OrderItem> getUser2() {
 
