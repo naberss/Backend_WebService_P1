@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import com.nabers.spring.entities.OrderItem;
 import com.nabers.spring.entities.Product;
 import com.nabers.spring.repositories.ProductRepository;
 
@@ -16,12 +17,19 @@ public class ProductService {
 	@Autowired
 	public ProductRepository productRepository;
 
+	@Autowired
+	public OrderItemService orderItemService;
+
 	public void Insert(Product Product) {
 		productRepository.save(Product);
 	}
 
 	public Optional<Product> findById(int id) {
 		return productRepository.findById(id);
+	}
+
+	public Product findByIdAux(int id) {
+		return productRepository.findById(id).orElse(null);
 	}
 
 	public Iterable<Product> findByName(String name) {
@@ -36,6 +44,11 @@ public class ProductService {
 		Product product = productRepository.findById(id).orElse(null);
 		updateData(product, newProduct);
 		productRepository.save(product);
+		Iterable<OrderItem> orderitems = orderItemService.findByProduct(id);
+		for (OrderItem ois : orderitems) {
+			ois.setPrice(product.getPrice());
+			orderItemService.Insert(ois);
+		}
 		return product;
 	}
 

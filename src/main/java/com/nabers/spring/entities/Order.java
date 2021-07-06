@@ -18,6 +18,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.nabers.spring.entities.enums.OrderStatus;
 
@@ -41,6 +42,7 @@ public class Order implements Serializable {
 	private Integer status;
 
 	@OneToMany(mappedBy = "id.order")
+	@JsonIgnore
 	private Set<OrderItem> items = new HashSet<>();
 
 	@OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
