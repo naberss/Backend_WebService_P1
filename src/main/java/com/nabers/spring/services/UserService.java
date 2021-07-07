@@ -2,7 +2,6 @@ package com.nabers.spring.services;
 
 import java.util.Optional;
 
-import javax.validation.ConstraintViolationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -16,7 +15,7 @@ import com.nabers.spring.services.Exceptions.DatabaseException;
 import com.nabers.spring.services.Exceptions.ResourceNotFoundException;
 
 @Service
-@Profile(value = "test")
+@Profile(value = "dev")
 public class UserService {
 
 	@Autowired

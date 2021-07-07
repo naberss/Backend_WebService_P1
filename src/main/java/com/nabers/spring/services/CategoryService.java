@@ -10,7 +10,7 @@ import com.nabers.spring.entities.Category;
 import com.nabers.spring.repositories.CategoryRepository;
 
 @Service
-@Profile(value = "test")
+@Profile(value = "dev")
 public class CategoryService {
 
 	@Autowired

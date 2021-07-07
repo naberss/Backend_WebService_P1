@@ -11,7 +11,7 @@ import com.nabers.spring.entities.Product;
 import com.nabers.spring.repositories.ProductRepository;
 
 @Service
-@Profile(value = "test")
+@Profile(value = "dev")
 public class ProductService {
 
 	@Autowired

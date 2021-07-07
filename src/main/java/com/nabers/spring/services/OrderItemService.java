@@ -10,7 +10,7 @@ import com.nabers.spring.entities.OrderItem;
 import com.nabers.spring.repositories.OrderItemRepository;
 
 @Service
-@Profile(value = "test")
+@Profile(value = "dev")
 public class OrderItemService {
 
 	@Autowired
