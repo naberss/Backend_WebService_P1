@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.nabers.spring.entities.User;
 import com.nabers.spring.repositories.UserRepository;
+import com.nabers.spring.services.Exceptions.ResourceNotFoundException;
 
 @Service
 @Profile(value = "test")
@@ -20,26 +21,37 @@ public class UserService {
 		userRepository.save(user);
 	}
 
-	public Optional<User> findById(int id) {
-		return userRepository.findById(id);
+	public Optional<User> findById(Integer id) {
+		return Optional.of(userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id)));
 	}
-	
+
 	public User findByIdAux(int id) {
-		return userRepository.findById(id).orElse(null);
+		return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 
 	public Iterable<User> findAll() {
-		return userRepository.findAll();
+		Iterable<User> users = userRepository.findAll();
+		if (users != null) {
+			return userRepository.findAll();
+		}
+		throw new ResourceNotFoundException(users);
 	}
 
 	public Iterable<User> findByName(String name) {
-		return userRepository.findByName(name);
+		Iterable<User> users = userRepository.findByName(name);
+		if (users != null) {
+			return userRepository.findByName(name);
+		}
+		throw new ResourceNotFoundException(users);
 	}
 
 	public User update(int id, User NewUser) {
 		User user = userRepository.findById(id).orElse(null);
 		updateData(user, NewUser);
-		return userRepository.save(user);
+		if (userRepository.save(user) == null) {
+			throw new ResourceNotFoundException(user);
+		}
+		return user;
 	}
 
 	public void updateData(User oldUser, User newUser) {
@@ -48,7 +60,7 @@ public class UserService {
 		oldUser.setPhone(newUser.getPhone());
 	}
 
-	public void deleteById(int id) {
+	public void deleteById(int id) throws ResourceNotFoundException {
 		userRepository.deleteById(id);
 	}
 }
