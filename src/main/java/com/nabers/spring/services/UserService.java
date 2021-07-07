@@ -2,12 +2,17 @@ package com.nabers.spring.services;
 
 import java.util.Optional;
 
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.nabers.spring.entities.User;
 import com.nabers.spring.repositories.UserRepository;
+import com.nabers.spring.services.Exceptions.DatabaseException;
 import com.nabers.spring.services.Exceptions.ResourceNotFoundException;
 
 @Service
@@ -48,10 +53,7 @@ public class UserService {
 	public User update(int id, User NewUser) {
 		User user = userRepository.findById(id).orElse(null);
 		updateData(user, NewUser);
-		if (userRepository.save(user) == null) {
-			throw new ResourceNotFoundException(user);
-		}
-		return user;
+		return userRepository.save(user);
 	}
 
 	public void updateData(User oldUser, User newUser) {
@@ -60,7 +62,14 @@ public class UserService {
 		oldUser.setPhone(newUser.getPhone());
 	}
 
-	public void deleteById(int id) throws ResourceNotFoundException {
-		userRepository.deleteById(id);
+	public void deleteById(int id) {
+		try {
+			userRepository.deleteById(id);
+		} catch (EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException(id);
+		} catch (DataIntegrityViolationException e) {
+			 throw new DatabaseException(e.getMessage()); 
+		}
+
 	}
 }

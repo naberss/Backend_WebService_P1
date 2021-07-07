@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.nabers.spring.services.Exceptions.ResourceNotFoundException;
-import com.nabers.spring.services.Exceptions.UnableToProceed;
+import com.nabers.spring.services.Exceptions.DatabaseException;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
@@ -25,10 +25,10 @@ public class ControllerExceptionHandler {
 		return ResponseEntity.status(status).body(err);
 	}
 
-	@ExceptionHandler(value = UnableToProceed.class)
-	public ResponseEntity<StandardError> unableToProceed(UnableToProceed e, HttpServletRequest request) {
-		String error = "Unable to Handle the Pressure";
-		HttpStatus status = HttpStatus.I_AM_A_TEAPOT;
+	@ExceptionHandler(value = DatabaseException.class)
+	public static ResponseEntity<StandardError> DatabaseError(DatabaseException e, HttpServletRequest request) {
+		String error = "Database Error";
+		HttpStatus status = HttpStatus.NOT_FOUND;
 		StandardError standardError = new StandardError(Instant.now(), status.value(), error, e.getMessage(),
 				request.getRequestURI());
 		return ResponseEntity.status(status).body(standardError);
