@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,7 @@ import com.nabers.spring.entities.User;
 import com.nabers.spring.services.UserService;
 
 @RestController
+@Profile(value = {"dev","test","prod"})
 @RequestMapping(method = RequestMethod.GET, path = "/users")
 public class UserController {
 

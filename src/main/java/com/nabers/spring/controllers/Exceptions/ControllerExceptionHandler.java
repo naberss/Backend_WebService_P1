@@ -9,8 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.nabers.spring.services.Exceptions.ResourceNotFoundException;
 import com.nabers.spring.services.Exceptions.DatabaseException;
+import com.nabers.spring.services.Exceptions.ResourceNotFoundException;
+import com.nabers.spring.services.Exceptions.UglyParametersException;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
@@ -28,7 +29,17 @@ public class ControllerExceptionHandler {
 	@ExceptionHandler(value = DatabaseException.class)
 	public static ResponseEntity<StandardError> DatabaseError(DatabaseException e, HttpServletRequest request) {
 		String error = "Database Error";
-		HttpStatus status = HttpStatus.NOT_FOUND;
+		HttpStatus status = HttpStatus.I_AM_A_TEAPOT;
+		StandardError standardError = new StandardError(Instant.now(), status.value(), error, e.getMessage(),
+				request.getRequestURI());
+		return ResponseEntity.status(status).body(standardError);
+
+	}
+	
+	@ExceptionHandler(value = UglyParametersException.class)
+	public static ResponseEntity<StandardError> UglyParameters(UglyParametersException e, HttpServletRequest request) {
+		String error = "Check Yourself";
+		HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
 		StandardError standardError = new StandardError(Instant.now(), status.value(), error, e.getMessage(),
 				request.getRequestURI());
 		return ResponseEntity.status(status).body(standardError);

@@ -1,7 +1,7 @@
 package com.nabers.spring.services;
 
+import java.util.List;
 import java.util.Optional;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -15,13 +15,14 @@ import com.nabers.spring.services.Exceptions.DatabaseException;
 import com.nabers.spring.services.Exceptions.ResourceNotFoundException;
 
 @Service
-@Profile(value = "dev")
+@Profile(value = { "dev", "test", "prod" })
 public class UserService {
 
 	@Autowired
 	public UserRepository userRepository;
 
 	public void Insert(User user) {
+
 		userRepository.save(user);
 	}
 
@@ -34,25 +35,30 @@ public class UserService {
 	}
 
 	public Iterable<User> findAll() {
-		Iterable<User> users = userRepository.findAll();
-		if (users != null) {
+		List<User> users = userRepository.findAll();
+		if (users.size() != 0) {
 			return userRepository.findAll();
 		}
 		throw new ResourceNotFoundException(users);
 	}
 
 	public Iterable<User> findByName(String name) {
-		Iterable<User> users = userRepository.findByName(name);
-		if (users != null) {
+		List<User> users = (List<User>) userRepository.findByName(name);
+		if (users.size() != 0) {
 			return userRepository.findByName(name);
 		}
 		throw new ResourceNotFoundException(users);
 	}
 
 	public User update(int id, User NewUser) {
-		User user = userRepository.findById(id).orElse(null);
-		updateData(user, NewUser);
-		return userRepository.save(user);
+		try {
+			User user = userRepository.findById(id).orElse(null);
+			updateData(user, NewUser);
+			return userRepository.save(user);
+		} catch (NullPointerException e) {
+			throw new ResourceNotFoundException(id);
+		}
+
 	}
 
 	public void updateData(User oldUser, User newUser) {
@@ -67,7 +73,7 @@ public class UserService {
 		} catch (EmptyResultDataAccessException e) {
 			throw new ResourceNotFoundException(id);
 		} catch (DataIntegrityViolationException e) {
-			 throw new DatabaseException(e.getMessage()); 
+			throw new DatabaseException(e.getMessage());
 		}
 
 	}

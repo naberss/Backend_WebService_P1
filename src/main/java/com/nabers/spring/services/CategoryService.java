@@ -1,16 +1,21 @@
 package com.nabers.spring.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.nabers.spring.entities.Category;
 import com.nabers.spring.repositories.CategoryRepository;
+import com.nabers.spring.services.Exceptions.DatabaseException;
+import com.nabers.spring.services.Exceptions.ResourceNotFoundException;
 
 @Service
-@Profile(value = "dev")
+@Profile(value = { "dev", "test", "prod" })
 public class CategoryService {
 
 	@Autowired
@@ -21,21 +26,43 @@ public class CategoryService {
 	}
 
 	public Optional<Category> findById(int id) {
-		return categoryRepository.findById(id);
+		return Optional.of(categoryRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id)));
+
 	}
 
 	public Iterable<Category> findByName(String name) {
-		return categoryRepository.findByName(name);
+
+		List<Category> categories = (List<Category>) categoryRepository.findByName(name);
+
+		if (categories.size() != 0) {
+			return categories;
+
+		} else {
+			throw new ResourceNotFoundException(name);
+		}
 	}
 
 	public Iterable<Category> findAll() {
-		return categoryRepository.findAll();
+
+		List<Category> categories = (List<Category>) categoryRepository.findAll();
+
+		if (categories.size() != 0) {
+			return categories;
+
+		} else {
+			throw new ResourceNotFoundException();
+		}
+
 	}
 
 	public Category update(Integer id, Category newCategory) {
-		Category category = findById(id).orElse(null);
-		updateData(category, newCategory);
-		return categoryRepository.save(category);
+		try {
+			Category category = findById(id).orElse(null);
+			updateData(category, newCategory);
+			return categoryRepository.save(category);
+		} catch (NullPointerException e) {
+			throw new ResourceNotFoundException(id);
+		}
 
 	}
 
@@ -44,7 +71,14 @@ public class CategoryService {
 	}
 
 	public void deleteById(int id) {
-		categoryRepository.deleteById(id);
+		try {
+			categoryRepository.deleteById(id);
+		} catch (DataIntegrityViolationException e) {
+			throw new DatabaseException(e.getMessage());
+		} catch (EmptyResultDataAccessException f) {
+			throw new ResourceNotFoundException(id);
+		}
+
 	}
 
 }

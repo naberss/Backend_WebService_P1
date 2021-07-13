@@ -1,16 +1,21 @@
 package com.nabers.spring.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.nabers.spring.entities.Order;
 import com.nabers.spring.repositories.OrderRepository;
+import com.nabers.spring.services.Exceptions.DatabaseException;
+import com.nabers.spring.services.Exceptions.ResourceNotFoundException;
 
 @Service
-@Profile(value = "dev")
+@Profile(value = { "dev", "test", "prod" })
 public class OrderService {
 
 	@Autowired
@@ -21,22 +26,33 @@ public class OrderService {
 	}
 
 	public Optional<Order> findById(int id) {
-		return orderRepository.findById(id);
+		return Optional.of(orderRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id)));
 	}
-	
+
 	public Order findByIdAux(int id) {
-		return orderRepository.findById(id).orElse(null);
+		return orderRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 
 	public Iterable<Order> findAll() {
-		return orderRepository.findAll();
+		List<Order> orders = orderRepository.findAll();
+
+		if (orders.size() != 0) {
+			return orders;
+		}
+		throw new ResourceNotFoundException();
 	}
 
 	public Order update(Integer id, Order newOrder) {
-		Order order = orderRepository.findById(id).orElse(null);
-		updateData(order, newOrder);
-		orderRepository.save(order);
-		return order;
+
+		try {
+
+			Order order = orderRepository.findById(id).orElse(null);
+			updateData(order, newOrder);
+			orderRepository.save(order);
+			return order;
+		} catch (NullPointerException e) {
+			throw new ResourceNotFoundException();
+		}
 	}
 
 	public void updateData(Order oldOrder, Order newOrder) {
@@ -46,7 +62,15 @@ public class OrderService {
 	}
 
 	public void deleteById(int id) {
-		orderRepository.deleteById(id);
+		try {
+			orderRepository.deleteById(id);
+		} catch (DataIntegrityViolationException e) {
+			throw new DatabaseException(e.getMessage());
+		} catch (EmptyResultDataAccessException f) {
+			throw new ResourceNotFoundException(id);
+
+		}
+
 	}
 
 }

@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import com.nabers.spring.services.OrderService;
 import com.nabers.spring.services.ProductService;
 
 @RestController
+@Profile(value = {"dev","test","prod"})
 @RequestMapping(method = RequestMethod.GET, path = "/orderitems")
 public class OrdemItemController {
 
